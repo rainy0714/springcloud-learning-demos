@@ -1,0 +1,38 @@
+server:
+  port: 8887
+
+spring:
+  application:
+    name: api-gateway-sentinel
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+  profiles:
+    active: path-route
+
+---   #三个横线表示再创建一个配置文件
+spring:
+  profiles: path-route   #配置文件名 和 spring.profiles.active 相对应
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          #表示gateway开启服务注册和发现功能,
+          #并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: api-gate-product
+          uri: lb://product-service #代表从注册中心获取服务，且以lb(load-balance)负载均衡方式转发
+          predicates: #断言
+            - Path=/product/api1/**
+          filters:
+            - StripPrefix=1 #表示将Path的路径/product在转发前去掉，如果设置StripPrefix=2，表示将/service01/*去掉 以此类推... 同时将spring.cloud.gateway.discovery.locator.enabled改为false，如果不改的话，之前的localhost:8799/client01/test01这样的请求地址也能正常访问，因为这时为每个服务创建了2个router
+        - id: api-gate-product2
+          uri: lb://product-service #代表从注册中心获取服务，且以lb(load-balance)负载均衡方式转发
+          predicates: #断言
+            - Path=/product/api2/test3
+          filters:
+            - StripPrefix=1

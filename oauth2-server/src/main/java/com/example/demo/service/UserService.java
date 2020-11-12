@@ -1,0 +1,50 @@
+package com.example.demo.service;
+
+import com.example.demo.domain.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Created by macro on 2019/9/30.
+ */
+@Service
+@Slf4j
+public class UserService implements UserDetailsService {
+    private List<User> userList;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void initData() {
+        String password = passwordEncoder.encode("123456");
+        userList = new ArrayList<>();
+        userList.add(new User("macro", password, AuthorityUtils.commaSeparatedStringToAuthorityList("admin")));
+        userList.add(new User("andy", password, AuthorityUtils.commaSeparatedStringToAuthorityList("client")));
+        userList.add(new User("mark", password, AuthorityUtils.commaSeparatedStringToAuthorityList("client")));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("当前登陆用户名为:{}", username);
+
+        //此处数据校验是基于内存的，后续需要改造成数据库获取
+        List<User> findUserList = userList.stream().filter(user -> user.getUsername().equals(username)).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(findUserList)) {
+            return findUserList.get(0);
+        } else {
+            throw new UsernameNotFoundException("用户名或密码错误");
+        }
+    }
+}

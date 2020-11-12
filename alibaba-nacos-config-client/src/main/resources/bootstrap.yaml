@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: alibaba-nacos-config-client
+  cloud:
+    nacos:
+      config:
+#        server-addr: 127.0.0.1:8848
+        server-addr: 8.129.48.169:8848
+#        namespace: 3ca423a5-e582-43f5-bd11-06101c939e6c
+        file-extension: yaml
+
+server:
+  port: 9004
+

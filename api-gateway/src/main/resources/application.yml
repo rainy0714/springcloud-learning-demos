@@ -1,0 +1,130 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  profiles:
+    active: path-route
+
+---   #三个横线表示再创建一个配置文件
+spring:
+  profiles: path-route   #配置文件名 和 spring.profiles.active 相对应
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          #表示gateway开启服务注册和发现功能,
+          #并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: api-gate-product
+          uri: lb://product-service #代表从注册中心获取服务，且以lb(load-balance)负载均衡方式转发
+          predicates: #断言
+            - Path=/product/**
+          filters:
+            - StripPrefix=1 #表示将Path的路径/product在转发前去掉，如果设置StripPrefix=2，表示将/service01/*去掉 以此类推... 同时将spring.cloud.gateway.discovery.locator.enabled改为false，如果不改的话，之前的localhost:8799/client01/test01这样的请求地址也能正常访问，因为这时为每个服务创建了2个router
+            - Log=true,true #自定义过滤器，控制日志输出
+
+---
+spring:
+  profiles: after-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示在该时间点之后的时间，发出的请求会被路由到uri
+            - After=2019-06-20T00:00:00.789-07:00[America/Denver]
+#        - After=1561098916602  也可以用long类型的时间戳格式
+
+---
+spring:
+  profiles: before-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示在该时间点之前的时间，发出的请求会被路由到uri
+            - Before=2019-12-20T00:00:00.789-07:00[America/Denver]
+
+---
+spring:
+  profiles: between-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示在该时间点之间的时间，发出的请求会被路由到uri
+            - Between=2019-02-20T00:00:00.789-07:00[America/Denver],2019-12-20T00:00:00.789-07:00[America/Denver]
+
+---
+spring:
+  profiles: header-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示当请求的请求头中有 key=Hello，value=World，发出的请求会被路由到uri
+            - Header=Hello, World
+          #可以是正则表达式 例如 - Header=Hello, \d+
+
+---
+spring:
+  profiles: cookie-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示当请求带有名为Hello，值为World的Cookie时，发出的请求会被路由到uri
+            - Cookie=Hello, World
+
+---
+spring:
+  profiles: host-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示当请求带有host为**.host.test时，发出的请求会被路由到uri
+            - Host=**.host.test
+
+---
+spring:
+  profiles: method-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示GET请求，都会被路由到uri
+            - Method=GET
+
+---
+spring:
+  profiles: query-route
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://MICROSERVICE01
+          predicates:
+            #表示请求带有参数key=a, value=b时，该请求会被路由到uri
+            - Query=a, b

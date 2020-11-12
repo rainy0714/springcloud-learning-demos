@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: api-gateway-sentinel-nacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+        ext-config:
+          dataId: api-gateway-sentinel-nacos
+          group: DEFAULT_GROUP
+    sentinel:
+      transport:
+        dashboard: localhost:8888
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+#      routes:
+#        - id: api-gate-product1
+#          uri: lb://product-service
+#          predicates:
+#            - Path=/product/api1/**
+#          filters:
+#            - StripPrefix=1
+#        - id: api-gate-product2
+#          uri: lb://product-service
+#          predicates:
+#            - Path=/product/api2/**
+#          filters:
+#            - StripPrefix=1

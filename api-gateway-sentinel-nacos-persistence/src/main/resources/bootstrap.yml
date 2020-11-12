@@ -1,0 +1,78 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: api-gateway-sentinel-nacos-persistence
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+        ext-config:
+          dataId: api-gateway-sentinel-nacos
+          group: DEFAULT_GROUP
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+    sentinel:
+      # 和Sentinel控制台DashBoard通讯，|| port：当前项目Http Server ip地址，|| dashboard：Sentinel 控制台DashBoard的地址
+      transport:
+        # 这个端口配置会在应用对应的机器上启动一个 Http Server，该 Server 会与 Sentinel 控制台做交互。比如 Sentinel 控制台添加了1个限流规则，会把规则数据 push 给这个 Http Server 接收，Http Server 再将规则注册到 Sentinel 中
+        port: 8719
+        # Sentinel DashBoard的地址
+        dashboard: localhost:8888
+      datasource:
+        # 流控规则
+        flow:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-flow-rules
+            groupId: SENTINEL_GROUP
+            # 规则类型，取值见：org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            ruleType: flow
+        # 降级规则
+        degrade:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-degrade-rules
+            groupId: SENTINEL_GROUP
+            ruleType: degrade
+        # 系统规则
+        system:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-system-rules
+            groupId: SENTINEL_GROUP
+            ruleType: system
+        # 授权规则
+        authority:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-authority-rules
+            groupId: SENTINEL_GROUP
+            ruleType: authority
+        # 热点规则
+        param-flow:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-param-flow-rules
+            groupId: SENTINEL_GROUP
+            ruleType: param-flow
+        gw-flow:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-gateway-flow-rules
+            groupId: SENTINEL_GROUP
+            ruleType: gw-flow
+        gw-api-group:
+          nacos:
+            serverAddr: 127.0.0.1:8848
+            dataId: ${spring.application.name}-gateway-api-rules
+            groupId: SENTINEL_GROUP
+            ruleType: gw-api-group

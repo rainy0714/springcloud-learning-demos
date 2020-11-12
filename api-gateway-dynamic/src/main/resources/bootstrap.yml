@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api-gateway-dynamic
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 3ca423a5-e582-43f5-bd11-06101c939e6c
+        ext-config:
+          dataId: api-gateway-dynamic
+          group: DEFAULT_GROUP
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 3ca423a5-e582-43f5-bd11-06101c939e6c
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
