@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,8 @@ public class UserController {
 
     @GetMapping("/getUserByAuth")
     public Object getUserByAuth(Authentication authentication) {
-        return authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+        return "验证通过，获取用户：" + user.getUsername();
     }
 
-    @GetMapping("/getUserNoAuth")
-    public Object getUserNoAuth(Authentication authentication) {
-        return "不需要验证就获取：" + authentication.getPrincipal();
-    }
 }

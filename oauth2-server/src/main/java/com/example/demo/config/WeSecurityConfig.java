@@ -19,13 +19,12 @@ public class WeSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        // 本段配置意思：/oauth/**和/login/**和/logout/**都可以直接访问，其他url都需要认真
         http.authorizeRequests()
                 .antMatchers("/oauth/**", "/login/**", "/logout/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().permitAll()
-                .and()
-                .logout().permitAll();
+                .formLogin().permitAll();
     }
 
     /**

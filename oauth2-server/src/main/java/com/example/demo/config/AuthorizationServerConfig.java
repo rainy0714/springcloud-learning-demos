@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 /**
  * 认证服务器配置
@@ -35,6 +36,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userService);
     }
+
+
 
     /**
      * withClient: //配置client_id
@@ -64,6 +67,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .refreshTokenValiditySeconds(864000)
                 .redirectUris("http://www.baidu.com")
                 .scopes("all")
-                .authorizedGrantTypes("authorization_code", "password");
+                .authorizedGrantTypes("authorization_code", "password")
+                .resourceIds("user-service");
     }
 }
