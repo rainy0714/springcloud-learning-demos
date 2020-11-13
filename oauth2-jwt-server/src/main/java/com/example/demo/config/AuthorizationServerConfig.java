@@ -37,8 +37,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private UserService userService;
 
     @Autowired
+//    @Qualifier("redisTokenStore")
     @Qualifier("jwtTokenStore")
     private TokenStore tokenStore;
+
     @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
     @Autowired
@@ -49,6 +51,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+//        //用redisTokenStore则用这段即可
+//        endpoints.authenticationManager(authenticationManager)
+//                .userDetailsService(userService)
+//                .tokenStore(tokenStore);
+
+
         //不需要JWT增强就用这个即可
 //        endpoints.authenticationManager(authenticationManager)
 //                .userDetailsService(userService)

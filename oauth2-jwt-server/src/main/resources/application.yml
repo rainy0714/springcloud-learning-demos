@@ -3,3 +3,6 @@ server:
 spring:
   application:
     name: oauth2-jwt-service
+  redis:
+    host: 8.129.48.169
+    port: 6379
