@@ -32,13 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
+                .formLogin()
+                .permitAll()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**", "/login/**", "/logout/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .permitAll();
+                .authenticated();
     }
 }

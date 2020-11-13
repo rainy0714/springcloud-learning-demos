@@ -17,6 +17,16 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/user")
 public class UserController {
 
+    @GetMapping("/getCurrentUser")
+    public Object getCurrentUser(Authentication authentication, HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        String token = StrUtil.subAfter(header, "bearer ", false);
+        return Jwts.parser()
+                .setSigningKey("test_key".getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     @GetMapping("/getUserByAuth")
     public Object getUserByAuth(Authentication authentication) {
         return "当前用户：" + authentication.getPrincipal().toString();
