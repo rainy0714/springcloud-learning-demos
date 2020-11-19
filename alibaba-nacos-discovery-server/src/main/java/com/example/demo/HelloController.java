@@ -16,7 +16,7 @@ public class HelloController {
     @GetMapping("/helloNacos")
     public String helloNacos(@RequestParam String name) {
         log.info("invoked name = " + name);
-        return "hello " + name;
+        return "Feign Server say hello " + name;
     }
 
 }
