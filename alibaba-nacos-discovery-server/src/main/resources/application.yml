@@ -14,4 +14,10 @@ spring:
       transport:
         dashboard: 127.0.0.1:8888
 
+logging:
+  level:
+    org:
+      springframework:
+        cloud: TRACE
+
 
