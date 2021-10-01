@@ -1,0 +1,35 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: server-provide
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+    sentinel:
+      transport:
+        dashboard: localhost:9999
+  boot:
+    admin:
+      client:
+        instance:
+          service-url: http://127.0.0.1:8001
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+  file:
+    path: /log
+    name: service-provide.log

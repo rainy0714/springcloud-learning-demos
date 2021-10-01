@@ -1,0 +1,38 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: springboot-admin-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 48b4292b-0ff3-442f-94ea-b5320aaa4d0c
+        metadata:
+          user.name: "admin"
+          user.password: "admin"
+  security:
+    user:
+      name: "admin"
+      password: "admin"
+  boot:
+    admin:
+      context-path: "monitor"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
+  file:
+    path: /log
+    name: springboot-admin-server.log
